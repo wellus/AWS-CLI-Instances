@@ -6,8 +6,14 @@ aws ec2 describe-instances --query 'Reservations[*].Instances[*].[InstanceId]' -
  aws ec2 describe-instances --filter "Name=tag-key,Values=Name" "Name=tag-value,Values=*$name_tag*" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*][Tags[?Key=='Name'].Value[],NetworkInterfaces[0].PrivateIpAddresses[0].PrivateIpAddress.InstanceId]" --output text
 #Show Name, Instance Type, Status, VPCID, Launch Date, Monitoring 
  aws ec2 describe-instances --query "Reservations[].Instances[].[InstanceId].[InstanceType, State.Name, VpcId, Monitoring.State, LaunchTime, Tags[?Key == \`Name\`] | [0].Value]"
- 
- 
+ #Installing custom monitrs
+ cd /opt/
+wget http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.1.zip
+unzip CloudWatchMonitoringScripts-1.2.1.zip
+rm CloudWatchMonitoringScripts-1.2.1.zip
+cd aws-scripts-mon
+Scripts/aws-scripts-mon/mon-put-instance-data.pl --mem-used-incl-cache-buff --mem-util --disk-space-util --disk-path=/ --mem-avail --disk-space-used --disk-space-avail --disk-space-units=gigabytes --memory-units=gigabytes --mem-used
+
  
  
  http://www.thegeekstuff.com/2016/04/aws-ec2-cli-examples
