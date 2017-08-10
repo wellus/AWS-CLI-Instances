@@ -6,6 +6,10 @@ aws ec2 describe-instances --query 'Reservations[*].Instances[*].[InstanceId]' -
 aws ec2 describe-instances --query 'Reservations[].Instances[].[PrivateIpAddress,Tags[?Key==`Name`].Value[]]' --output text | sed '$!N;s/\n/ /'
 #Show Name, Instance Type, Status, VPCID, Launch Date, Monitoring 
  aws ec2 describe-instances --query "Reservations[].Instances[].[InstanceId].[InstanceType, State.Name, VpcId, Monitoring.State, LaunchTime, Tags[?Key == \`Name\`] | [0].Value]"
+ #includes more tags
+ aws ec2 describe-instances --query 'Reservations[*].Instances[*].[InstanceId,Tags[?Key==`Name`].Value|[0],State.Name,PrivateIpAddress,PublicIpAddress]' --output text | column -t
+
+ 
  #Installing custom monitrs
  cd /opt/
 wget http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.1.zip
