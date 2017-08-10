@@ -3,7 +3,7 @@ aws ec2 describe-instances --query 'Reservations[*].Instances[*].[InstanceId]' -
 #Lists all stopped instances
  aws ec2 describe-instances --query 'Reservations[*].Instances[*].[InstanceId]' --filters Name=instance-state-name,Values=stopped --output text
  #Lists all machines with Machine tag Name and IP
- aws ec2 describe-instances --filter "Name=tag-key,Values=Name" "Name=tag-value,Values=*$name_tag*" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*][Tags[?Key=='Name'].Value[],NetworkInterfaces[0].PrivateIpAddresses[0].PrivateIpAddress.InstanceId]" --output text
+aws ec2 describe-instances --query 'Reservations[].Instances[].[PrivateIpAddress,Tags[?Key==`Name`].Value[]]' --output text | sed '$!N;s/\n/ /'
 #Show Name, Instance Type, Status, VPCID, Launch Date, Monitoring 
  aws ec2 describe-instances --query "Reservations[].Instances[].[InstanceId].[InstanceType, State.Name, VpcId, Monitoring.State, LaunchTime, Tags[?Key == \`Name\`] | [0].Value]"
  #Installing custom monitrs
